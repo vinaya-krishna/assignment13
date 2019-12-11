@@ -35,7 +35,9 @@ class ProductTable extends Component {
                             <th>Name</th>
                             <th>Category</th>
                             <th>Price</th>
-                            <th>&nbsp;</th>
+                            <th>Stock Status</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
