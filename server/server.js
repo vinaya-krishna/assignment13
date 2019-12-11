@@ -18,7 +18,7 @@ var Product = mongoose.model('product', {
     id : Number
 });
 
-mongoose.connect(dbPath, {useNewUrlParser: true, useUnifiedTopology: true}, (err) => {
+mongoose.connect(dbPath, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false}, (err) => {
     console.log("Mongodb connection", err);
 });
 
@@ -55,8 +55,8 @@ app.post('/product/create/', async (req, res) => {
 app.put('/product/update/:id', async (req, res) => {
     try{
         var reqestId = req.params.id;
-        await Product.updateOne({_id: reqestId}, req.body);
-        console.log("Updated"); 
+        console.log(req.body)
+        await Product.findOneAndUpdate({id: reqestId}, req.body);
         res.sendStatus(200);   
     }catch (error) {
         console.log(error);
@@ -71,11 +71,6 @@ app.put('/product/update/:id', async (req, res) => {
  */
 app.delete('/product/delete/:id', async (req, res) => {
     var reqestId = req.params.id;
-    console.log(reqestId)
-
-    var obj = await Product.find({id: reqestId})
-    console.log(obj)
-
     await Product.findOneAndDelete({id: reqestId});
     res.sendStatus(200);
 });

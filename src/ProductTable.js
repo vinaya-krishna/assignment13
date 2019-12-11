@@ -5,10 +5,15 @@ class ProductTable extends Component {
     constructor(props) {
         super(props)
         this.handleDestroy = this.handleDestroy.bind(this)
+        this.handleModify = this.handleModify.bind(this)
     }
 
     handleDestroy(id) {
         this.props.onDestroy(id)
+    }
+
+    handleModify(id) {
+        this.props.onModify(id)
     }
     
     render () {
@@ -23,7 +28,10 @@ class ProductTable extends Component {
                 <ProductRow 
                     product={product} 
                     key={product.productid} 
-                    onDestroy={this.handleDestroy}></ProductRow>
+                    onDestroy={this.handleDestroy}
+                    onModify={this.handleModify}>
+
+                </ProductRow>
             )
         })
 
@@ -36,6 +44,7 @@ class ProductTable extends Component {
                             <th>Category</th>
                             <th>Price</th>
                             <th>Stock Status</th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </thead>

@@ -15,6 +15,9 @@ class Products extends Component {
         this.handleFilter = this.handleFilter.bind(this)
         this.handleDestroy = this.handleDestroy.bind(this)
         this.handleSave = this.handleSave.bind(this)
+        this.handleUpdate = this.handleUpdate.bind(this)
+        this.populateForm = this.populateForm.bind(this)
+        this.child = React.createRef();
     }
 
     componentDidMount(){
@@ -92,6 +95,41 @@ class Products extends Component {
 
     }
 
+    populateForm(productId) {
+        console.log("Update this "+productId)
+        let productToUpdate = this.state.products[productId]
+        this.child.current.fillForm(productToUpdate);
+    }
+
+    handleUpdate(updatedProduct) {
+        console.log("Updated")
+        console.log(updatedProduct)
+        this.setState((prevState) => {
+            let products = prevState.products
+            products[updatedProduct.productid] = updatedProduct
+            return { products }
+        });
+
+        /**
+         * Persist the data in mongodb
+         */
+        var productId = updatedProduct.productid;
+        var data = {'product' : updatedProduct, 'id': productId}
+        fetch(`/product/update/${productId}`,{
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                        'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            console.log(response)
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
     render () {
         return (
             <div>
@@ -101,9 +139,15 @@ class Products extends Component {
                 <ProductTable 
                     products={this.state.products}
                     filterText={this.state.filterText}
-                    onDestroy={this.handleDestroy}></ProductTable>
+                    onDestroy={this.handleDestroy}
+                    onModify={this.populateForm}
+                    onUpdate={this.handleUpdate}>
+
+                </ProductTable>
                 <ProductForm
-                    onSave={this.handleSave}></ProductForm>
+                    onUpdate={this.handleUpdate}
+                    onSave={this.handleSave}
+                    ref={this.child}></ProductForm>
             </div>
         )
     }
